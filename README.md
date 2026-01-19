@@ -1,7 +1,7 @@
-# forte (C++)
+# forte
 
 Учебный макет среды исполнения IEC 61499 (аналог FORTE).  
-Сервер принимает XML?команды от 4diac по TCP, загружает конфигурации из `.fboot` и позволяет проводить тестирование и фаззинг.
+Сервер принимает XML команды от 4diac по TCP, загружает конфигурации из `.fboot` и позволяет проводить тестирование и фаззинг.
 
 ---
 
@@ -9,19 +9,20 @@
 
 ```text
 FORTE/
-??? build/                 # Каталог для сборки (создаётся вручную или CMake)
-??? pugixml/               # Встроенный исходный код pugixml (из архива releases)
-??? CMakeLists.txt         # Конфигурация CMake
-??? ПМИ.md                 # Программа и методика испытаний
-??? Technical specification.md  # ТЗ (tz.md)
-??? use-case_tests.png     # Диаграмма тестирования
-??? command_handler.h
-??? command_handler.cpp
-??? server.h
-??? server.cpp
-??? main.cpp
-??? test_client.cpp
-??? README.md
+    build/                              # Каталог для сборки (создаётся вручную или CMake)
+    pugixml/                            # Встроенный исходный код pugixml (из архива releases)
+    CMakeLists.txt                      # Конфигурация CMake
+    ПМИ.md                              # Программа и методика испытаний
+    Technical specification.md          # ТЗ
+    use-case_tests.png                  # Диаграмма тестирования
+    command_handler.h
+    command_handler.cpp
+    server.h
+    server.cpp
+    main.cpp
+    test_client.cpp
+    code_analyzer.cpp
+    README.md
 
 ## Сборка
 
@@ -36,13 +37,13 @@ FORTE/
     2.2. Распаковать архив так, чтобы структура была примерно такой:
 
     forte/
-    ??? pugixml/
-        ??? src/
-        ?   ??? pugixml.hpp
-        ?   ??? pugixml.cpp
-        ?   ??? pugiconfig.hpp
-        ??? CMakeLists.txt
-        ??? …
+        pugixml/
+            src/
+                pugixml.hpp
+                pugixml.cpp
+                pugiconfig.hpp
+            CMakeLists.txt
+            …
 3. Сборка проекта
 
 # 1. Создать каталог сборки
