@@ -1,0 +1,38 @@
+@startuml
+actor "Клиент 4diac" as CLIENT
+actor "Тестировщик" as TESTER
+
+rectangle ForteMock {
+  (Принять TCP подключение) as accept
+  (Обработать XML команду) as process
+  (Выполнить логику блоков) as execute
+  (Загрузить .fboot файл) as load_boot
+  (Создать блоки из конфигурации) as create_blocks
+  (Вернуть XML-ответ) as send_response
+  (Залогировать ошибку) as log_error
+  (Отправить искаженные данные) as fuzz
+  (Сервер падает с core dump) as crash
+  (Проанализировать через gdb) as analyze
+}
+
+' Основной сценарий
+CLIENT --> accept
+accept --> process
+process --> execute
+execute --> send_response
+send_response --> CLIENT
+
+' Загрузка конфигурации
+CLIENT --> load_boot
+load_boot --> create_blocks
+create_blocks --> execute
+
+' Сценарий тестировщика
+TESTER --> fuzz
+fuzz --> process
+process --> crash
+crash --> analyze
+crash --> log_error
+log_error --> TESTER
+
+@enduml
