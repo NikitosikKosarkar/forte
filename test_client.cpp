@@ -19,7 +19,7 @@
 void send_fuzzed() {
     std::ifstream file("test_command.xml", std::ios::binary);
     if (!file.is_open()) {
-        std::cerr << "Ошибка: файл test_command.xml не найден" << std::endl;
+        std::cerr << "Error: file test_command.xml not found" << std::endl;
         return;
     }
     
@@ -36,7 +36,7 @@ void send_fuzzed() {
         unsigned char old_val = data[pos];
         data[pos] = rand() % 256;
         
-        printf("Изменил байт %d: %02x ? %02x\n", pos, old_val, data[pos]);
+        printf("Changed the byte %d: %02x ? %02x\n", pos, old_val, data[pos]);
     }
     
 #ifdef _WIN32
@@ -46,7 +46,7 @@ void send_fuzzed() {
 #endif
     
     if (sock < 0) {
-        std::cerr << "Ошибка: не удалось создать сокет" << std::endl;
+        std::cerr << "Error: couldn't create socket" << std::endl;
         return;
     }
     
@@ -57,7 +57,7 @@ void send_fuzzed() {
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
     
     if (connect(sock, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
-        std::cerr << "Ошибка: не удалось подключиться к серверу" << std::endl;
+        std::cerr << "Error: failed to connect to the server" << std::endl;
         return;
     }
     
@@ -68,9 +68,9 @@ void send_fuzzed() {
     
     if (bytes_received > 0) {
         response[bytes_received] = '\0';
-        printf("Ответ: %s\n", response);
+        printf("Answer: %s\n", response);
     } else {
-        std::cout << "Сервер не ответил (возможно упал)" << std::endl;
+        std::cout << "The server did not respond" << std::endl;
     }
     
 #ifdef _WIN32
@@ -86,17 +86,17 @@ int main() {
 #ifdef _WIN32
     WSADATA wsa_data;
     if (WSAStartup(MAKEWORD(2, 2), &wsa_data) != 0) {
-        std::cerr << "Ошибка инициализации Winsock" << std::endl;
+        std::cerr << "Winsock initialization error" << std::endl;
         return 1;
     }
 #endif
     
     for (int i = 0; i < 100; i++) {
-        printf("\n--- Тест %d ---\n", i + 1);
+        printf("\n--- Test %d ---\n", i + 1);
         try {
             send_fuzzed();
         } catch (const std::exception& e) {
-            std::cerr << "Ошибка: " << e.what() << std::endl;
+            std::cerr << "Error: " << e.what() << std::endl;
             break;
         }
     }

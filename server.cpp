@@ -37,7 +37,7 @@ bool ForteServer::load_boot_file(const std::string& filename) {
 }
 
 void ForteServer::handle_client(int client_socket) {
-    std::cout << "Подключился новый клиент" << std::endl;
+    std::cout << "A new client has joined" << std::endl;
     
     char buffer[4096] = {0};
     
@@ -51,18 +51,18 @@ void ForteServer::handle_client(int client_socket) {
         buffer[bytes_received] = '\0';
         
         std::string request(buffer);
-        std::cout << "Получено: " << request << std::endl;
+        std::cout << "Received: " << request << std::endl;
         
         std::string response = command_handler.process_command(request);
         
         send(client_socket, response.c_str(), response.length(), 0);
-        std::cout << "Отправили: " << response << std::endl;
+        std::cout << "Sent: " << response << std::endl;
         
         std::memset(buffer, 0, sizeof(buffer));
     }
     
     CLOSE_SOCKET(client_socket);
-    std::cout << "Клиент отключился" << std::endl;
+    std::cout << "The client has disconnected" << std::endl;
 }
 
 bool ForteServer::start() {
@@ -76,14 +76,14 @@ bool ForteServer::start() {
     
     socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (INVALID_SOCKET_CHECK) {
-        std::cerr << "Ошибка создания сокета" << std::endl;
+        std::cerr << "Socket creation error" << std::endl;
         return false;
     }
     
     int reuse = 1;
     if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, 
                    (const char*)&reuse, sizeof(reuse)) < 0) {
-        std::cerr << "Ошибка setsockopt" << std::endl;
+        std::cerr << "setsockopt error" << std::endl;
         CLOSE_SOCKET(socket_fd);
         return false;
     }
@@ -98,19 +98,19 @@ bool ForteServer::start() {
     }
     
     if (bind(socket_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
-        std::cerr << "Ошибка bind" << std::endl;
+        std::cerr << "bind error" << std::endl;
         CLOSE_SOCKET(socket_fd);
         return false;
     }
     
     if (listen(socket_fd, 5) < 0) {
-        std::cerr << "Ошибка listen" << std::endl;
+        std::cerr << "listen error" << std::endl;
         CLOSE_SOCKET(socket_fd);
         return false;
     }
     
-    std::cout << "Сервер запущен на " << host << ":" << port << std::endl;
-    std::cout << "Ожидание подключение..." << std::endl;
+    std::cout << "The server is running on " << host << ":" << port << std::endl;
+    std::cout << "Waiting for connection..." << std::endl;
     
     while (true) {
         struct sockaddr_in client_addr;
@@ -125,14 +125,14 @@ bool ForteServer::start() {
                 if (errno != EINTR)
             #endif
             {
-                std::cerr << "Ошибка accept" << std::endl;
+                std::cerr << "The accept error" << std::endl;
             }
             continue;
         }
         
         char client_ip[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, INET_ADDRSTRLEN);
-        std::cout << "Подключение от " << client_ip << ":" << ntohs(client_addr.sin_port) << std::endl;
+        std::cout << "Connection from " << client_ip << ":" << ntohs(client_addr.sin_port) << std::endl;
 
         std::thread client_thread(&ForteServer::handle_client, this, client_socket);
         client_thread.detach();

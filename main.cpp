@@ -14,13 +14,13 @@ int main(int argc, char* argv[]) {
         ForteServer server("localhost", 61499);
         
         if (!config_file.empty()) {
-            std::cout << "Загрузка конфигурации из " << config_file << std::endl;
+            std::cout << "Loading the configuration from " << config_file << std::endl;
             server.load_boot_file(config_file);
         }
         
         server.start();
     } catch (const std::exception& e) {
-        std::cerr << "Ошибка: " << e.what() << std::endl;
+        std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
     

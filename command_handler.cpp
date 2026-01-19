@@ -17,7 +17,7 @@ std::string CommandHandler::process_command(const std::string& xml_command) {
     pugi::xml_parse_result result = doc.load_string(clean_command.c_str());
     
     if (!result) {
-        std::cerr << "Ошибка парсинга XML: " << result.description() << std::endl;
+        std::cerr << "XML parsing error: " << result.description() << std::endl;
         return "";
     }
     
@@ -25,7 +25,7 @@ std::string CommandHandler::process_command(const std::string& xml_command) {
     std::string action = root.attribute("Action").value();
     std::string request_id = root.attribute("ID").value();
     
-    std::cout << "Обработка команды: " << action << " (ID: " << request_id << ")" << std::endl;
+    std::cout << "Command processing: " << action << " (ID: " << request_id << ")" << std::endl;
     
     if (action == "CREATE") {
         return handle_create(doc, request_id);
@@ -54,7 +54,7 @@ std::string CommandHandler::handle_create(const pugi::xml_document& doc, const s
         
         blocks[name] = block;
         
-        std::cout << "Создан блок: " << name << " типа " << fb_type << std::endl;
+        std::cout << "A block: " << name << " has been created with the type " << fb_type << std::endl;
         return "";
     }
     
@@ -63,7 +63,7 @@ std::string CommandHandler::handle_create(const pugi::xml_document& doc, const s
         std::string source = conn_elem.attribute("Source").value();
         std::string destination = conn_elem.attribute("Destination").value();
         
-        std::cout << "Создана связь: " << source << " -> " << destination << std::endl;
+        std::cout << "A connection: " << source << " has been created -> " << destination << std::endl;
         return "";
     }
     
@@ -85,7 +85,7 @@ std::string CommandHandler::handle_write(const pugi::xml_document& doc, const st
             
             if (blocks.find(block_name) != blocks.end()) {
                 blocks[block_name]->inputs[port] = source_value;
-                std::cout << "Записано в " << destination << ": " << source_value << std::endl;
+                std::cout << "Recorded in " << destination << ": " << source_value << std::endl;
             }
         }
         return "";
@@ -132,7 +132,7 @@ bool CommandHandler::load_boot_file(const std::string& filename) {
     std::ifstream file(filename);
     
     if (!file.is_open()) {
-        std::cerr << "Файл " << filename << " не найден" << std::endl;
+        std::cerr << "File " << filename << " not found" << std::endl;
         return false;
     }
     
@@ -141,7 +141,7 @@ bool CommandHandler::load_boot_file(const std::string& filename) {
         int line_num = 0;
         int commands_processed = 0;
         
-        std::cout << "Загрузка конфигурации из " << filename << std::endl;
+        std::cout << "Loading the configuration from " << filename << std::endl;
         
         while (std::getline(file, line)) {
             line_num++;
@@ -163,7 +163,7 @@ bool CommandHandler::load_boot_file(const std::string& filename) {
                 xml_part.erase(0, xml_part.find_first_not_of(" \t\n\r"));
                 xml_part.erase(xml_part.find_last_not_of(" \t\n\r") + 1);
                 
-                std::cout << "[" << line_num << "] Ресурс: " << resource_name << std::endl;
+                std::cout << "[" << line_num << "] Resource: " << resource_name << std::endl;
                 
                 if (xml_part.empty()) {
                     continue;
@@ -172,31 +172,31 @@ bool CommandHandler::load_boot_file(const std::string& filename) {
                 try {
                     std::string response = process_command(xml_part);
                     commands_processed++;
-                    std::cout << "[" << line_num << "] Обработано: " << response << std::endl;
+                    std::cout << "[" << line_num << "] Processed: " << response << std::endl;
                 } catch (const std::exception& e) {
-                    std::cerr << "[" << line_num << "] Ошибка обработки: " << e.what() << std::endl;
+                    std::cerr << "[" << line_num << "] Processing error: " << e.what() << std::endl;
                 }
             } else if (line[0] == '<') {
                 try {
                     std::string response = process_command(line);
                     commands_processed++;
-                    std::cout << "[" << line_num << "] Обработано (без ресурса): " << response << std::endl;
+                    std::cout << "[" << line_num << "] Processed (without resource): " << response << std::endl;
                 } catch (const std::exception& e) {
-                    std::cerr << "[" << line_num << "] Ошибка парсинга XML: " << e.what() << std::endl;
+                    std::cerr << "[" << line_num << "] XML parsing error: " << e.what() << std::endl;
                 }
             } else {
-                std::cout << "[" << line_num << "] Непонятный формат: " << line.substr(0, 80) << "..." << std::endl;
+                std::cout << "[" << line_num << "] Unclear format: " << line.substr(0, 80) << "..." << std::endl;
             }
         }
         
-        std::cout << "Конфигурация загружена. Обработано команд: " << commands_processed << std::endl;
-        std::cout << "Создано блоков: " << blocks.size() << std::endl;
+        std::cout << "The configuration is loaded. Commands processed: " << commands_processed << std::endl;
+        std::cout << "Blocks created: " << blocks.size() << std::endl;
         
         file.close();
         return true;
         
     } catch (const std::exception& e) {
-        std::cerr << "Ошибка загрузки .fboot файла: " << e.what() << std::endl;
+        std::cerr << "Download error .fboot file: " << e.what() << std::endl;
         return false;
     }
 }
