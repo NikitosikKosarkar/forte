@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Request ID="1" Action="CREATE">
+    <FB Name="EMB_RES" Type="EMB_RES" />
+</Request>
+
+<Request ID="2" Action="CREATE">
+    <FB Name="StringToString1" Type="STRING2STRING" />
+</Request>
+
+<Request ID="3" Action="CREATE">
+    <FB Name="StringToString2" Type="STRING2STRING" />
+</Request>
+
+<Request ID="4" Action="CREATE">
+    <FB Name="AppendString" Type="APPEND_STRING_2" />
+</Request>
+
+<Request ID="5" Action="CREATE">
+    <FB Name="ConsoleOutput" Type="OUT_ANY_CONSOLE" />
+</Request>
+
+<Request ID="6" Action="CREATE">
+    <Connection Source="StringToString1.OUT" Destination="AppendString.IN_1" />
+</Request>
+
+<Request ID="7" Action="CREATE">
+    <Connection Source="StringToString2.OUT" Destination="AppendString.IN_2" />
+</Request>
+
+<Request ID="8" Action="CREATE">
+    <Connection Source="AppendString.OUT" Destination="ConsoleOutput.IN" />
+</Request>
+
+<Request ID="9" Action="WRITE">
+    <Connection Source="Hello, " Destination="StringToString1.IN" />
+</Request>
+
+<Request ID="10" Action="WRITE">
+    <Connection Source="World!" Destination="StringToString2.IN" />
+</Request>
+
+<Request ID="11" Action="START" />
+
+<Request ID="12" Action="QUERY" />

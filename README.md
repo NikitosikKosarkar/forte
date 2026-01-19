@@ -60,3 +60,13 @@ cmake --build . --config Release
 
 # 4. Запуск
 build\Release\forte.exe ..\test.fboot
+
+4. Тестирование
+
+# 1. Анализ core dump
+g++ -o core_analyzer core_analyzer.cpp
+./core_analyzer.cpp
+
+# 2. Фаззинг-тесты
+g++ -o test_client_cpp test_client.cpp
+./test_client_cpp
